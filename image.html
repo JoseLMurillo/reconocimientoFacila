@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Reconocimiento Facial - Fotografía</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .form-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .image-container {
+            position: relative;
+            display: inline-block;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            background: white;
+            min-height: 400px;
+            min-width: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #imagePreview {
+            max-width: 100%;
+            max-height: 500px;
+            display: none;
+        }
+
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+        }
+
+        .upload-area {
+            border: 2px dashed #ccc;
+            padding: 40px;
+            text-align: center;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .upload-area:hover {
+            border-color: #007bff;
+            color: #007bff;
+        }
+
+        .upload-area.dragover {
+            border-color: #28a745;
+            background: #f8f9fa;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            width: 200px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .status {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            text-align: center;
+        }
+
+        .loading {
+            color: #666;
+        }
+
+        .registered-faces {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+        }
+
+        .face-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .face-tag {
+            background: #e3f2fd;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 14px;
+            color: #1976d2;
+        }
+
+        .clear-btn {
+            background: #dc3545;
+            font-size: 14px;
+            padding: 5px 10px;
+        }
+
+        .clear-btn:hover {
+            background: #c82333;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Reconocimiento Facial con Fotografía</h1>
+
+        <div class="form-container">
+            <input type="text" id="nombre" placeholder="Nombre del usuario">
+            <button id="registrar" disabled>Registrar Rostro</button>
+            <button id="reconocer" disabled>Reconocer Rostros</button>
+            <button id="clear-image">Limpiar Imagen</button>
+
+            <button id="abrir-camara">Abrir Cámara</button>
+            <button id="capturar-foto" disabled>Capturar Foto</button>
+        </div>
+
+        <div class="image-container">
+            <div id="upload-area" class="upload-area">
+                <p><strong>Haz clic aquí o arrastra una imagen</strong></p>
+                <p>Formatos soportados: JPG, PNG, GIF</p>
+                <input type="file" id="imageInput" accept="image/*">
+            </div>
+            <img id="imagePreview" alt="Imagen cargada">
+            <video id="video" autoplay muted playsinline
+                style="display:none; max-width:100%; max-height:500px;"></video>
+        </div>
+
+        <div class="status">
+            <div id="loading" class="loading">Cargando modelos de reconocimiento facial...</div>
+            <div id="recognition-status" style="display: none;">
+                <strong>Estado:</strong> <span id="status-text">Listo para procesar imágenes</span>
+            </div>
+        </div>
+
+        <div class="registered-faces">
+            <strong>Rostros registrados (<span id="face-count">0</span>):</strong>
+            <div class="face-list" id="face-list">
+                <em>No hay rostros registrados</em>
+            </div>
+            <button id="clear-all" class="clear-btn" style="margin-top: 10px; display: none;">Limpiar Todo</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+    <script src="scriptImage.js"></script>
+</body>
+</html>
